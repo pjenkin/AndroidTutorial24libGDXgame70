@@ -7,8 +7,11 @@ import com.badlogic.gdx.graphics.GL20;
 import com.badlogic.gdx.graphics.OrthographicCamera;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.BitmapFont;
+import com.badlogic.gdx.graphics.g2d.Sprite;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.graphics.g2d.freetype.FreeTypeFontGenerator;
+
+import javax.xml.soap.Text;
 
 public class PNJGdxGame extends ApplicationAdapter {
 	// REM out all boilerplate code - class variables and inside methods
@@ -19,6 +22,8 @@ public class PNJGdxGame extends ApplicationAdapter {
 	private BitmapFont bitmapFont;
 	FreeTypeFontGenerator.FreeTypeFontParameter freeTypeFontParameter;
 	private OrthographicCamera orthographicCamera;
+	private Texture image;		// raw image
+	private Sprite sprite;
 
 
 	@Override
@@ -31,7 +36,6 @@ public class PNJGdxGame extends ApplicationAdapter {
 		freeTypeFontParameter = new FreeTypeFontGenerator.FreeTypeFontParameter();
 		freeTypeFontParameter.size = 72;
 		freeTypeFontParameter.color = Color.RED;
-//		freeTypeFontParameter.characters = "Hello there";
 		bitmapFont = freeTypeFontGenerator.generateFont(freeTypeFontParameter);
 		// use freetype font https://stackoverflow.com/a/40739429/11365317
 		// best to specify this from start - very hard to retrospectively add this library
@@ -41,6 +45,8 @@ public class PNJGdxGame extends ApplicationAdapter {
 //		bitmapFont.getData().setScale(5);	// default font size small on hi-res screen, so scale-up
 
 		// NB Screen expected to be in landscape format by libGDX by default https://stackoverflow.com/a/35614010/11365317
+		image = new Texture("v_jenkin_organ_cbvmc.jpg");		// raw image data
+//		image = new Texture("vjorgansmall.png");		// raw image data
 
 	}
 
@@ -60,14 +66,16 @@ public class PNJGdxGame extends ApplicationAdapter {
 		orthographicCamera.setToOrtho(false, Gdx.graphics.getWidth(), Gdx.graphics.getHeight());
 		orthographicCamera.update();
 
+		Sprite sprite = new Sprite(image);	// initialise sprite
+
 		spriteBatch = new SpriteBatch();
-		spriteBatch.setProjectionMatrix(orthographicCamera.combined);
+//		spriteBatch.setProjectionMatrix(orthographicCamera.combined);
 		// Drawing happening below
 		spriteBatch.begin();
-		bitmapFont.draw(spriteBatch, "Durdadhewhi, fatla genowgh whi?", 0,100);
+//		bitmapFont.draw(spriteBatch, "Durdadhewhi, fatla genowgh whi?", 0,100);
 		// Origin of screen is bottom-left, so a y of zero is likely to be off-screen/invisible
+		sprite.draw(spriteBatch);
 		spriteBatch.end();
-
 	}
 	
 	@Override
@@ -77,5 +85,6 @@ public class PNJGdxGame extends ApplicationAdapter {
 		spriteBatch.dispose();
 		bitmapFont.dispose();
 		freeTypeFontGenerator.dispose();
+		image.dispose();		// remember to dispose of everything!
 	}
 }
