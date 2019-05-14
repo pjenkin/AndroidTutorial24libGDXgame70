@@ -6,9 +6,12 @@ import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.GL20;
 import com.badlogic.gdx.graphics.OrthographicCamera;
 import com.badlogic.gdx.graphics.Texture;
+import com.badlogic.gdx.graphics.g2d.Animation;
 import com.badlogic.gdx.graphics.g2d.BitmapFont;
 import com.badlogic.gdx.graphics.g2d.Sprite;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
+import com.badlogic.gdx.graphics.g2d.TextureAtlas;
+import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.graphics.g2d.freetype.FreeTypeFontGenerator;
 
 import javax.xml.soap.Text;
@@ -24,7 +27,11 @@ public class PNJGdxGame extends ApplicationAdapter {
 	private OrthographicCamera orthographicCamera;
 	private Texture image;		// raw image
 	private Sprite sprite;
-
+	// for animation (74)
+	private TextureAtlas shooterAtlas;
+//	private Animation animation;
+	private Animation<TextureRegion> animation;
+	private float timePassed = 0;		// used to determine where in sequence
 
 	@Override
 	public void create () {
@@ -47,6 +54,12 @@ public class PNJGdxGame extends ApplicationAdapter {
 		// NB Screen expected to be in landscape format by libGDX by default https://stackoverflow.com/a/35614010/11365317
 		image = new Texture("v_jenkin_organ_cbvmc.jpg");		// raw image data
 //		image = new Texture("vjorgansmall.png");		// raw image data
+
+		// 74 animation
+		shooterAtlas = new TextureAtlas(Gdx.files.internal("shooter_dude.pack"));
+//		animation = new Animation(1/30f, shooterAtlas.getRegions());
+		animation = new Animation<TextureRegion>(1/30f, shooterAtlas.getRegions());
+		// 1/30f for 30 fps
 
 	}
 
@@ -72,9 +85,14 @@ public class PNJGdxGame extends ApplicationAdapter {
 //		spriteBatch.setProjectionMatrix(orthographicCamera.combined);
 		// Drawing happening below
 		spriteBatch.begin();
+		// for 71 text
 //		bitmapFont.draw(spriteBatch, "Durdadhewhi, fatla genowgh whi?", 0,100);
 		// Origin of screen is bottom-left, so a y of zero is likely to be off-screen/invisible
-		sprite.draw(spriteBatch);
+		// for 73 draw image
+//		sprite.draw(spriteBatch);
+		// for 74 animation
+		timePassed += Gdx.graphics.getDeltaTime();		// use gdx library for time
+		spriteBatch.draw(animation.getKeyFrame(timePassed, true), 100, 100);
 		spriteBatch.end();
 	}
 	
@@ -86,5 +104,6 @@ public class PNJGdxGame extends ApplicationAdapter {
 		bitmapFont.dispose();
 		freeTypeFontGenerator.dispose();
 		image.dispose();		// remember to dispose of everything!
+		shooterAtlas.dispose();		// remember to dispose of everything!
 	}
 }
